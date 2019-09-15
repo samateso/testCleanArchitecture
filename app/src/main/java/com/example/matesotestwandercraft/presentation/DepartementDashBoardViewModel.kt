@@ -3,15 +3,15 @@ package com.example.matesotestwandercraft.presentation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import com.example.matesotestwandercraft.common.DisplayableItem
-import com.example.matesotestwandercraft.domain.RetreiveDepartementsList
+import com.example.matesotestwandercraft.data.RetreiveDepartementsList
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import polanski.option.Option.none
+import javax.inject.Inject
 
-class DepartementDashBoardViewModel(interactor: RetreiveDepartementsList, mapper: DepartementDisplayItemMapper) :
+class DepartementDashBoardViewModel @Inject constructor(interactor: RetreiveDepartementsList, mapper: DepartementDisplayItemMapper) :
     ViewModel() {
 
 

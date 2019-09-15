@@ -5,17 +5,15 @@ import com.example.matesotestwandercraft.common.DisplayableItem.Companion.toDisp
 import com.example.matesotestwandercraft.data.models.Departement
 import io.reactivex.Observable
 import java.util.function.Function
+import javax.inject.Inject
 
 
 /***
  * Mapper qui transforme le modele data en
  */
-class DepartementDisplayItemMapper : Function<List<Departement>, List<DisplayableItem<Any>>> {
-    private var _depViewModelMapper: DepartementViewModelMapper? = null
+class DepartementDisplayItemMapper @Inject constructor(depViewModelMapper: DepartementViewModelMapper): Function<List<Departement>, List<DisplayableItem<Any>>> {
+    private var _depViewModelMapper: DepartementViewModelMapper =  depViewModelMapper
 
-    internal fun CreditDisplayableItemMapper(depViewModelMapper: DepartementViewModelMapper) {
-        this._depViewModelMapper = depViewModelMapper
-    }
 
     @Throws(Exception::class)
     override fun apply(deps: List<Departement>): List<DisplayableItem<Any>> {
@@ -27,6 +25,6 @@ class DepartementDisplayItemMapper : Function<List<Departement>, List<Displayabl
     }
 
     private fun wrapInDisplayableItem(viewEntity: DepartementViewModel): DisplayableItem<Any> {
-        return toDisplayableItem(viewEntity, 0)
+        return toDisplayableItem(viewEntity, Integer(0))
     }
 }

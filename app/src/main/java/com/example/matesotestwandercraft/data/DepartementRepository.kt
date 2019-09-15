@@ -1,18 +1,22 @@
 package com.example.matesotestwandercraft.data
 
 import com.example.matesotestwandercraft.data.models.Departement
+import com.example.matesotestwandercraft.data.store.ReactiveStore
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.annotations.NonNull
 import io.reactivex.schedulers.Schedulers
 import polanski.option.Option
-import retrofit2.Retrofit
-import retrofit2.create
 import java.lang.reflect.Type
+import javax.inject.Inject
+import javax.inject.Singleton
 
-public class DepartementRepository(
-    //dep: ReactiveStore<String, Departement>,
-    //depService: DepartementService,
+
+@Singleton
+class DepartementRepository @Inject constructor (
+    @NonNull dep: ReactiveStore<String, Departement>,
+    depService: DepartementService,
     depMapper: DepartementMapper,
     networkCall: NetworkCall
 ) {
@@ -23,16 +27,19 @@ public class DepartementRepository(
 
 
     val type: Type = object : TypeToken<ReactiveStore<String, Departement>>() {}.type
-    private var _dep : ReactiveStore<String, Departement>? = null /*retrofit.create(ReactiveStore::class.java)*/
 
-    private var _depService : DepartementService = retrofit.create(DepartementService::class.java)
+    //private var _depService : DepartementService = retrofit.create(DepartementService::class.java)
+    private var _depService : DepartementService = depService
 
-    private var _depMapper : DepartementMapper? = depMapper
+    private var _dep : ReactiveStore<String, Departement> = dep
+
+
+    private var _depMapper : DepartementMapper = depMapper
 
 
     //GET
     fun getAllDepartements() : Observable<Option<List<Departement>>>? {
-        return _dep!!.getAll()
+        return _dep.getAll()
     }
     //FETCH
     fun  fetchDepartements() : Completable {
@@ -41,14 +48,14 @@ public class DepartementRepository(
         //_depService = retrofit.create(DepartementService.class)
 
 
-        return _depService!!.
+        return _depService.
             getDepartement().
             subscribeOn(Schedulers.io()).
             observeOn(Schedulers.computation()).
             flatMapObservable{ contributors -> Observable.fromIterable(contributors)  }.
-            map{ _depMapper!!.apply(it)}
+            map{ _depMapper.apply(it)}
             .toList()
-            .doOnSuccess{ dep ->  _dep!!.replaceAll(dep) }
+            .doOnSuccess{ dep ->  _dep.replaceAll(dep) }
             .toCompletable()
     }
     //REQUEST
